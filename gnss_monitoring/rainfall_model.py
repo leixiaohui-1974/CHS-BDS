@@ -62,10 +62,6 @@ class RainfallPredictor:
         print(f"✅ Simulated {days} days of data with {num_events} rain events.")
         return timesteps, pwv, rainfall
 
-
-        print(f"✅ Simulated {days} days of data with {num_events} rain events.")
-        return timesteps, pwv, rainfall
-
     def engineer_features(self, windows=[1, 3, 6]):
         """
         Engineers features from the PWV data.

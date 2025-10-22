@@ -1,5 +1,43 @@
-numpy
-scipy
-matplotlib
-pandas
-scikit-learn
+# Core scientific computing
+numpy>=1.20.0
+scipy>=1.7.0
+matplotlib>=3.4.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+
+# Configuration and data handling
+pyyaml>=6.0
+openpyxl>=3.0.0
+
+# Visualization
+plotly>=5.0.0
+dash>=2.14.0
+dash-bootstrap-components>=1.5.0
+
+# Automation and scheduling
+schedule>=1.2.0
+
+# Phase 4: Database (PostgreSQL/TimescaleDB)
+psycopg2-binary>=2.9.0
+
+# Phase 4: FastAPI and WebSocket
+fastapi>=0.104.0
+uvicorn>=0.24.0
+python-multipart>=0.0.6
+websockets>=12.0
+
+# Phase 4: Authentication
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Phase 4: PDF Reports
+reportlab>=4.0.0
+
+# Phase 4: System Monitoring
+psutil>=5.9.0
+
+# Optional: SQLAlchemy for advanced database features
+sqlalchemy>=2.0.0
+
+# Optional: Additional visualization
+kaleido>=0.2.1

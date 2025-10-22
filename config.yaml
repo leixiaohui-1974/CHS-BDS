@@ -1,0 +1,189 @@
+# CHS-BDS Configuration File
+# =========================
+
+# Global settings
+global:
+  log_level: INFO
+  output_dir: ./output
+  data_dir: ./data
+  enable_plots: true
+  plot_format: png
+  plot_dpi: 300
+
+# GNSS-IR Water Level Monitoring Configuration
+gnss_ir:
+  # Signal wavelength (meters)
+  wavelength: 0.1903  # GPS L1
+
+  # Antenna height above reference point (meters)
+  antenna_height: 1.5
+
+  # Elevation angle range (degrees)
+  min_elevation: 5
+  max_elevation: 30
+
+  # Reflector height search range (meters)
+  min_reflector_height: 0.5
+  max_reflector_height: 10.0
+
+  # Lomb-Scargle periodogram parameters
+  oversample_factor: 5
+  detrend_type: linear
+
+  # Data quality control
+  snr_min_threshold: -50  # dB
+  snr_max_threshold: 60   # dB
+
+# Deformation Monitoring Configuration
+deformation:
+  # Wavelength (meters)
+  wavelength: 0.1903  # GPS L1
+
+  # Reference station coordinates (ECEF, meters)
+  ref_station:
+    x: 3275650.0
+    y: 553640.0
+    z: 5201550.0
+
+  # Monitoring station initial position (ECEF, meters)
+  mon_station:
+    x: 3275750.0
+    y: 553650.0
+    z: 5201545.0
+
+  # Least squares solver parameters
+  max_iterations: 10
+  convergence_threshold: 0.001  # meters
+
+  # Alert thresholds
+  displacement_warning: 0.01   # meters (10mm)
+  displacement_critical: 0.05  # meters (50mm)
+  velocity_warning: 0.001      # m/day (1mm/day)
+
+# PWV Estimation Configuration
+pwv:
+  # Station location
+  station:
+    latitude: 34.0   # degrees
+    height: 150.0    # meters above sea level
+
+  # Data simulation parameters
+  num_epochs: 288
+  interval_minutes: 5
+
+  # Atmospheric models
+  zhd_model: saastamoinen
+  pwv_model: bevis1992
+
+  # Quality control
+  ztd_min: 2.0    # meters
+  ztd_max: 3.0    # meters
+  pressure_range: [900, 1100]  # hPa
+  temperature_range: [-40, 50]  # Celsius
+
+# Rainfall Prediction Configuration
+rainfall:
+  # Time series parameters
+  lookback_days: 30
+  interval_minutes: 10
+
+  # Feature engineering
+  feature_windows: [1, 3, 6]  # multiples of interval
+
+  # Prediction parameters
+  look_ahead_minutes: 30
+
+  # Model parameters
+  model_type: logistic_regression
+  test_size: 0.3
+  random_state: 42
+  class_weight: balanced
+
+  # Alert thresholds
+  rainfall_threshold: 0.1      # mm/hr (light rain)
+  heavy_rain_threshold: 7.6    # mm/hr (heavy rain)
+  probability_threshold: 0.6   # prediction confidence
+
+# Data Processing
+processing:
+  # Parallel processing
+  enable_multiprocessing: false
+  num_workers: 4
+
+  # Data filtering
+  enable_outlier_removal: true
+  outlier_sigma: 3.0
+
+  # Smoothing
+  enable_smoothing: false
+  smoothing_window: 5
+
+# Output Configuration
+output:
+  # File formats
+  save_csv: true
+  save_json: true
+  save_plots: true
+
+  # Report generation
+  generate_report: true
+  report_format: html
+
+  # Database (future feature)
+  enable_database: false
+  database_type: postgresql
+  database_host: localhost
+  database_port: 5432
+
+# Monitoring and Alerts
+monitoring:
+  # Real-time monitoring
+  enable_realtime: false
+  update_interval: 60  # seconds
+
+  # Alert system
+  enable_alerts: false
+  alert_email: alert@example.com
+  alert_methods: [email, sms]
+
+  # Web dashboard
+  enable_dashboard: false
+  dashboard_port: 8050
+  dashboard_host: 0.0.0.0
+
+# Logging Configuration
+logging:
+  version: 1
+  disable_existing_loggers: false
+
+  formatters:
+    standard:
+      format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+      datefmt: '%Y-%m-%d %H:%M:%S'
+    detailed:
+      format: '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s'
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: DEBUG
+      formatter: standard
+      stream: ext://sys.stdout
+
+    file:
+      class: logging.handlers.RotatingFileHandler
+      level: INFO
+      formatter: detailed
+      filename: ./logs/chs-bds.log
+      maxBytes: 10485760  # 10MB
+      backupCount: 5
+
+  loggers:
+    gnss_monitoring:
+      level: DEBUG
+      handlers: [console, file]
+      propagate: false
+
+  root:
+    level: INFO
+    handlers: [console]

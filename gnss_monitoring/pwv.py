@@ -60,9 +60,6 @@ class PWVEstimator:
 
         return self.timestamps, self.ztd, self.pressure, self.temperature_c
 
-
-        return self.timestamps, self.ztd, self.pressure, self.temperature_c
-
     def calculate_zhd(self):
         """
         Calculates the Zenith Hydrostatic Delay (ZHD) using the Saastamoinen model.

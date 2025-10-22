@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  chs-bds:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chs-bds:latest
+    container_name: chs-bds-monitoring
+
+    # Environment variables
+    environment:
+      - CHS_BDS_LOG_LEVEL=INFO
+      - TZ=Asia/Shanghai
+
+    # Volumes for data persistence
+    volumes:
+      - ./data:/data:ro              # Input data (read-only)
+      - ./output:/output             # Output results
+      - ./logs:/logs                 # Log files
+      - ./config.yaml:/app/config.yaml:ro  # Configuration
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Override default command to run all modules
+    command: ["run", "--all", "--config", "/app/config.yaml"]
+
+  # Optional: PostgreSQL database for data storage (future feature)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: chs-bds-db
+  #   environment:
+  #     - POSTGRES_USER=chsbds
+  #     - POSTGRES_PASSWORD=chsbds_password
+  #     - POSTGRES_DB=chsbds
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   restart: unless-stopped
+
+  # Optional: Web dashboard (future feature)
+  # dashboard:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dashboard
+  #   container_name: chs-bds-dashboard
+  #   ports:
+  #     - "8050:8050"
+  #   depends_on:
+  #     - chs-bds
+  #     - postgres
+  #   restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    name: chs-bds-network
+    driver: bridge
